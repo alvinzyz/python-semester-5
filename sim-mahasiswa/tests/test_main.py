@@ -1,19 +1,35 @@
-import sys
-import os
+import pytest
+from src.models import Mahasiswa, DaftarMahasiswa
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.models import Mahasiswa
+class TestMahasiswa:
+    def test_buat_mahasiswa_valid(self):
+        mhs = Mahasiswa("2024SI001", "Andi Pratama",
+                        "Sistem Informasi", 2024, 3.50)
+        assert mhs.nim == "2024SI001"
+        assert mhs.ipk == 3.50
 
-def test_mahasiswa_attributes():
-    mhs = Mahasiswa("20241320035", "Alvin", "A1", "Sistem Informasi", "Bojong Koneng", "Badminton")
-    assert mhs.npm     == "20241320035"
-    assert mhs.nama    == "Alvin"
-    assert mhs.kelas   == "A1"
-    assert mhs.jurusan == "Sistem Informasi"
-    assert mhs.alamat  == "Bojong Koneng"
-    assert mhs.hobby   == "Badminton"
-    print("✅ Semua test berhasil!")
+    def test_nim_tidak_valid(self):
+        with pytest.raises(ValueError):
+            Mahasiswa("abc", "Test", "SI", 2024, 3.0)
 
-if __name__ == "__main__":
-    test_mahasiswa_attributes()
+    def test_ipk_diluar_range(self):
+        with pytest.raises(ValueError):
+            Mahasiswa("2024SI002", "Test", "SI", 2024, 5.0)
+
+
+class TestDaftarMahasiswa:
+    def test_tambah_dan_cari(self):
+        db = DaftarMahasiswa()
+        mhs = Mahasiswa("2024SI001", "Andi", "SI", 2024)
+        db.tambah(mhs)
+        assert db.cari("2024SI001") == mhs
+        assert db.jumlah == 1
+
+    def test_nim_duplikat(self):
+        db = DaftarMahasiswa()
+        m1 = Mahasiswa("2024SI001", "Andi", "SI", 2024)
+        m2 = Mahasiswa("2024SI001", "Budi", "SI", 2024)
+        db.tambah(m1)
+        with pytest.raises(ValueError):
+            db.tambah(m2)

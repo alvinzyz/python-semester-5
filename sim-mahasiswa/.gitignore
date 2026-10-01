@@ -1,13 +1,37 @@
+# .gitignore untuk proyek Python
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Python bytecode
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-.env
-.venv
-venv/
-*.egg-info/
+*$py.class
+*.so
+
+# Distribusi / packaging
 dist/
 build/
-.idea/
+*.egg-info/
+*.egg
+
+# IDE
 .vscode/
-*.log
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables (jangan commit secrets!)
+.env
+.env.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
